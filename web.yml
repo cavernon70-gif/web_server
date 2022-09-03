@@ -1,0 +1,43 @@
+---
+- name: webserver configuration
+  hosts: dev
+  tasks:
+    - name: apache install
+      yum:
+         name:
+           - httpd
+           - firewalld
+         state: present
+    - name: apache service start
+      service:
+         name: httpd
+         state: started
+         enabled: yes
+    - name: apache configure to firewall
+      firewalld:
+         service: http
+         permanent: yes
+         immediate: yes
+         state: enabled
+    - name: default tag
+      copy:
+         content: "This is MYWEB PAGE \n"
+         dest: /var/www/html/index.html
+      notify: restart_service
+    - name: alpha tag
+      copy:
+         content: "This is alpha tag \n"
+         dest: /var/www/html/index.html
+      notify: restart_service   
+      tags: [never,alpha]
+    - name: beta tag
+      copy:
+         content: "This is beta tag \n"
+         dest: /var/www/html/index.html
+      notify: restart_service
+      tags: [never,beta]
+  handlers:
+    - name: restart_service
+      service:
+         name: httpd
+         state: restarted
