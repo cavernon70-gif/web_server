@@ -1,0 +1,24 @@
+---
+- name: apache install and config
+  hosts: dev
+  tasks:
+    - name: httpd install
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+    - name: service start
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: yes
+    - name: adding content
+      ansible.builtin.copy:
+        content: "Hello Webserver"
+        dest: /var/www/html/index.html
+      notify: restart_server
+  handlers:
+    - name: restart_server
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+        enabled: yes    
