@@ -23,21 +23,3 @@
       copy:
          content: "This is MYWEB PAGE \n"
          dest: /var/www/html/index.html
-      notify: restart_service
-    - name: alpha tag
-      copy:
-         content: "This is alpha tag \n"
-         dest: /var/www/html/index.html
-      notify: restart_service   
-      tags: [never,alpha]
-    - name: beta tag
-      copy:
-         content: "This is beta tag \n"
-         dest: /var/www/html/index.html
-      notify: restart_service
-      tags: [never,beta]
-  handlers:
-    - name: restart_service
-      service:
-         name: httpd
-         state: restarted
